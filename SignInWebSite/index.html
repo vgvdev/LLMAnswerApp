@@ -18,5 +18,57 @@
             <button type="submit">Sign In</button>
         </form>
     </div>
+    <div class="mt-2">
+        <button type="button" id="microsoft-login-button"
+                class="w-full py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-primary-600 transition-colors text-sm dark:border-gray-700 dark:focus:ring-offset-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+                <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+                <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+                <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+            </svg>
+            Microsoft
+        </button>
+    </div>
+
+    <div id="user-message" class="user-message" style="margin: 24px auto; max-width: 400px; color: #333; text-align: center;"></div>
+
+    <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+
+    <script>
+        const msalConfig = {
+            auth: {
+                clientId: "47879a55-9b1f-48d7-b5eb-f50ffd42fd59",
+                authority: "https://login.microsoftonline.com/common",
+                redirectUri: "https://mango-sky-04788d31e.3.azurestaticapps.net/.auth/login/aad/callback"
+            },
+        };
+
+        const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+        function handleMicrosoftUserSignIn(response) {
+            // Handle the user sign-in process here
+            const id_token = response.idToken;
+            console.log(response.account.username);
+            document.getElementById('user-message').textContent = "Signed in as: " + response.account.username;
+        }
+
+        document.getElementById('microsoft-login-button').addEventListener('click', function () {
+            const loginRequest = {
+                scopes: ["profile", "email"],
+            };
+
+            document.getElementById('user-message').textContent = "Clicked, starting";
+
+            msalInstance
+                .loginPopup(loginRequest)
+                .then((response) => {
+                    handleMicrosoftUserSignIn(response);
+                })
+                .catch((error) => {
+                    console.error("Error during Microsoft login:", error);
+                });
+        });
+    </script>
 </body>
 </html>

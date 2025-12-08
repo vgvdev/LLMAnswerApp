@@ -50,7 +50,7 @@
             // Handle the user sign-in process here
             const id_token = response.idToken;
             console.log(response.account.username);
-            document.getElementById('user-message').textContent = "Signed in as: " + response.account.username;
+            document.getElementById('user-message').textContent += "\n Signed in as: " + response.account.username;
         }
 
         document.getElementById('microsoft-login-button').addEventListener('click', function () {
@@ -66,6 +66,7 @@
                     handleMicrosoftUserSignIn(response);
                 })
                 .catch((error) => {
+                    document.getElementById('user-message').textContent += "\n error: " + error;
                     console.error("Error during Microsoft login:", error);
                 });
         });
